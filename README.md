@@ -1,5 +1,4 @@
 # aquarium-manager
-"# Manage Aquarium
 
 A fun, practical aquarium management app that lets users track their real aquariums while maintaining a pixel-art virtual version of each tank. Users can log livestock, plants, water parameters, maintenance tasks, reminders, notes, photos, wishlist items, and tank health trends.
 
