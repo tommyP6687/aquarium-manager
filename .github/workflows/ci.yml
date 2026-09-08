@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: gd, pdo_mysql
+
+      - name: Lint PHP files
+        run: find . -name "*.php" -print0 | xargs -0 -n1 php -l
+
+      - name: Run pixel art algorithm test
+        run: php tests/pixel_art_algorithm_test.php

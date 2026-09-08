@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aquarium Manager - Login</title>
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+
+    <body>
+        <!-- Modular navigation architecture link hook -->
+         <?php include __DIR__ . '/../includes/nav.php'; ?>
+
+         <main class="login-wrapper">
+            <section class="login-card">
+                <h2>login</h2>
+
+                <form method="POST" nonvalidate>
+                    <div class="input-component">
+                        <label for="username">username</label>
+                        <input type="text" id="username" name="username" required autocomplete="username">
+                    </div>
+
+                    <div class="input-component">
+                        <label for="password">password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                    </div>
+
+                    <div class="action-component">
+                        <button type="submit" class="btn btn-primary">fih</button>
+                    </div>
+                </form>
+            </section>
+         </main>
+    </body>
+</html>
