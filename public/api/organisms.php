@@ -8,7 +8,7 @@ $userId = $_SESSION['user_id'];
 $method = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
-$updatableColumns = ['custom_name', 'health_status', 'growth_stage', 'current_size_inches'];
+$updatableColumns = ['custom_name', 'health_status', 'growth_stage', 'current_size_inches', 'notes'];
 
 const ORGANISM_SELECT = '
     SELECT Organism.*, Tanks.custom_name AS tank_name,
@@ -113,8 +113,8 @@ try {
             $speciesId = findOrCreateSpecies($pdo, $input);
 
             $stmt = $pdo->prepare(
-                'INSERT INTO Organism (user_id, tank_id, species_id, pixel_art_id, custom_name, date_added, health_status, growth_stage, current_size_inches)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                'INSERT INTO Organism (user_id, tank_id, species_id, pixel_art_id, custom_name, date_added, health_status, growth_stage, current_size_inches, notes)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
             );
             $stmt->execute([
                 $userId,
@@ -126,6 +126,7 @@ try {
                 $input['health_status'] ?? 'Healthy',
                 $input['growth_stage'] ?? null,
                 $input['current_size_inches'] ?? null,
+                $input['notes'] ?? null,
             ]);
 
             send_json(findOwnedOrganism($pdo, (int) $pdo->lastInsertId(), $userId), 201);

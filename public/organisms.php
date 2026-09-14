@@ -70,6 +70,10 @@ requireLogin();
                             <label for="current_size_inches">Current Size (inches):</label>
                             <input type="number" step="0.01" id="current_size_inches">
                         </div>
+                        <div class="input-component">
+                            <label for="organism_notes">Notes:</label>
+                            <textarea id="organism_notes" rows="3"></textarea>
+                        </div>
                     </fieldset>
 
                     <fieldset id="species-fieldset">
