@@ -84,3 +84,19 @@ CREATE TABLE IF NOT EXISTS Organism (
     FOREIGN KEY (species_id) REFERENCES Species(id), -- Foreign Key to reference Species table for id
     FOREIGN KEY (pixel_art_id) REFERENCES PixelArt(id) -- Foreign Key to reference PixelArt table for id
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create WaterTest table. One row per individual parameter reading.
+CREATE TABLE IF NOT EXISTS WaterTest (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    tank_id INT UNSIGNED NOT NULL,
+    tested_at DATETIME NOT NULL,
+    parameter_name VARCHAR(50) NOT NULL, -- e.g. pH, Ammonia, Temperature, Salinity
+    value DECIMAL(10,4) NOT NULL,
+    unit VARCHAR(20), -- e.g. ppm, dKH, ppt
+    notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id), -- Primary Key for WaterTest table
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
+    FOREIGN KEY (tank_id) REFERENCES Tanks(id) ON DELETE CASCADE -- Foreign Key to reference Tanks table for id
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
