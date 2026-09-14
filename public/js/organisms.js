@@ -1,6 +1,14 @@
 const organismList = document.getElementById('organism-list');
 const organismForm = document.getElementById('organism-form');
+const organismFormTitle = document.getElementById('organism-form-title');
 const organismFormError = document.getElementById('organism-form-error');
+const organismFormSubmit = document.getElementById('organism-form-submit');
+const organismFormCancel = document.getElementById('organism-form-cancel');
+const organismIdField = document.getElementById('organism-id');
+const speciesFieldset = document.getElementById('species-fieldset');
+const spriteFieldset = document.getElementById('sprite-fieldset');
+const tankField = document.getElementById('tank-field');
+const dateAddedField = document.getElementById('date-added-field');
 const tankSelect = document.getElementById('tank_id');
 
 const speciesSearchInput = document.getElementById('species_search');
@@ -31,20 +39,39 @@ function clearFormError() {
     organismFormError.textContent = '';
 }
 
-function renderSpriteThumbnail(pixelData, gridSize) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'sprite-thumbnail';
-    wrapper.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+function resetForm() {
+    organismForm.reset();
+    organismIdField.value = '';
+    selectedSpriteId = null;
+    speciesSuggestions.hidden = true;
+    speciesFieldset.hidden = false;
+    spriteFieldset.hidden = false;
+    tankField.hidden = false;
+    dateAddedField.hidden = false;
+    organismFormTitle.textContent = 'Add an Organism';
+    organismFormSubmit.textContent = 'Add Organism';
+    organismFormCancel.hidden = true;
+    clearFormError();
+}
 
-    for (const row of pixelData) {
-        for (const hex of row) {
-            const cell = document.createElement('div');
-            cell.style.backgroundColor = hex;
-            wrapper.appendChild(cell);
-        }
-    }
+function fillEditForm(organism) {
+    organismIdField.value = organism.id;
+    document.getElementById('custom_name').value = organism.custom_name ?? '';
+    document.getElementById('health_status').value = organism.health_status ?? 'Healthy';
+    document.getElementById('growth_stage').value = organism.growth_stage ?? '';
+    document.getElementById('current_size_inches').value = organism.current_size_inches ?? '';
 
-    return wrapper;
+    // Tank/date/species/sprite aren't editable here -- hide those fields rather
+    // than silently ignoring whatever the user types into them.
+    speciesFieldset.hidden = true;
+    spriteFieldset.hidden = true;
+    tankField.hidden = true;
+    dateAddedField.hidden = true;
+
+    organismFormTitle.textContent = 'Edit Organism';
+    organismFormSubmit.textContent = 'Update Organism';
+    organismFormCancel.hidden = false;
+    clearFormError();
 }
 
 async function loadTanks() {
@@ -119,12 +146,17 @@ async function loadOrganisms() {
             organism.health_status,
         ].filter(Boolean).join(' • ');
 
+        const editButton = document.createElement('button');
+        editButton.type = 'button';
+        editButton.textContent = 'Edit';
+        editButton.addEventListener('click', () => fillEditForm(organism));
+
         const deleteButton = document.createElement('button');
         deleteButton.type = 'button';
         deleteButton.textContent = 'Delete';
         deleteButton.addEventListener('click', () => deleteOrganism(organism.id));
 
-        card.append(title, meta, deleteButton);
+        card.append(title, meta, editButton, deleteButton);
         organismList.appendChild(card);
     }
 }
@@ -191,6 +223,44 @@ organismForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     clearFormError();
 
+    const editingId = organismIdField.value;
+
+    if (editingId) {
+        const updateData = {
+            custom_name: document.getElementById('custom_name').value.trim(),
+            health_status: document.getElementById('health_status').value,
+            growth_stage: document.getElementById('growth_stage').value || null,
+            current_size_inches: document.getElementById('current_size_inches').value || null,
+        };
+
+        const response = await fetch(`api/organisms.php?id=${editingId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updateData),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            showFormError(result.error || 'Something went wrong.');
+            return;
+        }
+
+        resetForm();
+        await loadOrganisms();
+        return;
+    }
+
+    if (!tankSelect.value) {
+        showFormError('Please select a tank.');
+        return;
+    }
+
+    if (scientificNameInput.value.trim() === '') {
+        showFormError('Please search for a species or enter a scientific name.');
+        return;
+    }
+
     const spriteMode = document.querySelector('input[name="sprite_mode"]:checked').value;
     let pixelArtId = null;
 
@@ -249,12 +319,12 @@ organismForm.addEventListener('submit', async (event) => {
         return;
     }
 
-    organismForm.reset();
-    selectedSpriteId = null;
-    speciesSuggestions.hidden = true;
+    resetForm();
     await loadOrganisms();
     await loadSprites();
 });
+
+organismFormCancel.addEventListener('click', resetForm);
 
 loadTanks();
 loadSprites();

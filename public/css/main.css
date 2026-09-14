@@ -194,3 +194,37 @@ body {
 .sprite-bank-item.selected {
     background-color: rgb(198, 229, 254);
 }
+
+.site-nav {
+    display: flex;
+    gap: 15px;
+    padding: 15px 20px;
+    background-color: rgb(255, 250, 208);
+    border-bottom: 1.5px solid black;
+}
+
+.site-nav a {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.site-nav a:hover {
+    text-decoration: underline;
+}
+
+a.btn-secondary {
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+}
+
+.tanks-page section {
+    margin-bottom: 25px;
+}
+
+.tanks-page > .action-component {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
