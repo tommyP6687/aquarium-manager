@@ -38,3 +38,48 @@ CREATE TABLE IF NOT EXISTS Tanks (
     PRIMARY KEY (id), -- Primary Key for Tanks table
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE -- Foreign Key to reference Users table for id
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create Species table. Shared reference data, found-or-created when an organism is added.
+CREATE TABLE IF NOT EXISTS Species (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    scientific_name VARCHAR(150) NOT NULL UNIQUE,
+    common_name VARCHAR(150),
+    organism_type VARCHAR(50), -- e.g. Fish, Invertebrate, Plant, Coral
+    salinity_type VARCHAR(50), -- e.g. freshwater, saltwater, brackish
+    external_taxon_id INT UNSIGNED, -- iNaturalist taxon id, if found via species search
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id) -- Primary Key for Species table
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create PixelArt table. A user's personal sprite bank; not tied to one organism or species.
+CREATE TABLE IF NOT EXISTS PixelArt (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    sprite_name VARCHAR(100) NOT NULL,
+    grid_size TINYINT UNSIGNED NOT NULL,
+    pixel_data JSON NOT NULL, -- grid of hex color strings
+    source_type VARCHAR(20) NOT NULL, -- 'photo_generated' for now; 'hand_drawn' reserved for a future editor
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id), -- Primary Key for PixelArt table
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE -- Foreign Key to reference Users table for id
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create Organism table.
+CREATE TABLE IF NOT EXISTS Organism (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    tank_id INT UNSIGNED NOT NULL,
+    species_id INT UNSIGNED NOT NULL,
+    pixel_art_id INT UNSIGNED NOT NULL,
+    custom_name VARCHAR(100) NOT NULL,
+    date_added DATE NOT NULL,
+    health_status VARCHAR(50) NOT NULL DEFAULT 'Healthy',
+    growth_stage VARCHAR(50),
+    current_size_inches DECIMAL(6,2),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id), -- Primary Key for Organism table
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
+    FOREIGN KEY (tank_id) REFERENCES Tanks(id) ON DELETE CASCADE, -- Foreign Key to reference Tanks table for id
+    FOREIGN KEY (species_id) REFERENCES Species(id), -- Foreign Key to reference Species table for id
+    FOREIGN KEY (pixel_art_id) REFERENCES PixelArt(id) -- Foreign Key to reference PixelArt table for id
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
