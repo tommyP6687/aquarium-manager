@@ -23,15 +23,17 @@ requireLogin();
             </section>
 
             <section class="tank-form-section">
-                <h3>Add an Organism</h3>
+                <h3 id="organism-form-title">Add an Organism</h3>
                 <p id="organism-form-error" class="error-message" hidden></p>
 
                 <form id="organism-form">
+                    <input type="hidden" id="organism-id" value="">
+
                     <fieldset>
                         <legend>Basics</legend>
-                        <div class="input-component">
+                        <div class="input-component" id="tank-field">
                             <label for="tank_id">Tank:</label>
-                            <select id="tank_id" required>
+                            <select id="tank_id">
                                 <option value="">Loading tanks...</option>
                             </select>
                         </div>
@@ -39,7 +41,7 @@ requireLogin();
                             <label for="custom_name">Organism Name:</label>
                             <input type="text" id="custom_name" required>
                         </div>
-                        <div class="input-component">
+                        <div class="input-component" id="date-added-field">
                             <label for="date_added">Date Added:</label>
                             <input type="date" id="date_added">
                         </div>
@@ -70,7 +72,7 @@ requireLogin();
                         </div>
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset id="species-fieldset">
                         <legend>Species</legend>
                         <div class="input-component">
                             <label for="species_search">Search Species:</label>
@@ -80,7 +82,7 @@ requireLogin();
 
                         <div class="input-component">
                             <label for="scientific_name">Scientific Name:</label>
-                            <input type="text" id="scientific_name" required>
+                            <input type="text" id="scientific_name">
                         </div>
                         <div class="input-component">
                             <label for="common_name">Common Name:</label>
@@ -104,7 +106,7 @@ requireLogin();
                         <input type="hidden" id="external_taxon_id" value="">
                     </fieldset>
 
-                    <fieldset>
+                    <fieldset id="sprite-fieldset">
                         <legend>Sprite</legend>
 
                         <div class="input-component">
@@ -131,12 +133,14 @@ requireLogin();
                     </fieldset>
 
                     <div class="action-component">
-                        <button type="submit" class="btn-secondary">Add Organism</button>
+                        <button type="submit" id="organism-form-submit" class="btn-secondary">Add Organism</button>
+                        <button type="button" id="organism-form-cancel" class="btn-secondary" hidden>Cancel</button>
                     </div>
                 </form>
             </section>
         </main>
 
+        <script src="js/common.js"></script>
         <script src="js/organisms.js"></script>
     </body>
 </html>
