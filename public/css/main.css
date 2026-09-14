@@ -84,3 +84,64 @@ body {
     color: rgb(113, 172, 219);
     transform: scale(1);
 }
+
+.tanks-page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.tank-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tank-card {
+    padding: 12px 15px;
+    border: 1.5px solid black;
+    border-radius: 5px;
+    background-color: rgb(255, 250, 208);
+}
+
+.tank-card h4 {
+    margin: 0 0 5px;
+}
+
+.tank-form-section {
+    padding: 15px;
+    border-radius: 5px;
+    background-color: rgb(255, 250, 208);
+}
+
+.tank-form-section fieldset {
+    margin-bottom: 15px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.tank-form-section .input-component {
+    margin-top: 10px;
+}
+
+.tank-form-section .equipment-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.btn-secondary {
+    font-family: inherit;
+    padding: 8px 16px;
+    border: 1.5px solid black;
+    border-radius: 5px;
+    background-color: rgb(198, 229, 254);
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: rgb(255, 255, 255);
+}

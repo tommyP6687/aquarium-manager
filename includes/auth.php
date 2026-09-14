@@ -22,6 +22,13 @@ function redirectIfLoggedIn()
     }
 }
 
+function requireApiLogin(): void
+{
+    if (!isUserLoggedIn()) {
+        send_json(['error' => 'Unauthorized'], 401);
+    }
+}
+
 function registerUser(string $username, string $email, string $password): array
 {
     $username = trim($username);
