@@ -1,6 +1,7 @@
 const CHART_COLORS = {
     parameter: '#2a78d6',
     livestock: '#eb6834',
+    maintenance: '#1baf7a',
     gridline: '#e1e0d9',
     axisText: '#898781',
     ink: '#0b0b0b',
@@ -14,9 +15,12 @@ const parameterCanvas = document.getElementById('parameter-chart');
 const parameterEmpty = document.getElementById('parameter-chart-empty');
 const livestockCanvas = document.getElementById('livestock-chart');
 const livestockEmpty = document.getElementById('livestock-chart-empty');
+const maintenanceCanvas = document.getElementById('maintenance-chart');
+const maintenanceEmpty = document.getElementById('maintenance-chart-empty');
 
 let parameterChart = null;
 let livestockChart = null;
+let maintenanceChart = null;
 let currentWaterTests = [];
 
 function formatLabel(dateString) {
@@ -162,15 +166,72 @@ function renderLivestockChart(organisms) {
     });
 }
 
+function renderMaintenanceChart(logs) {
+    if (maintenanceChart) {
+        maintenanceChart.destroy();
+        maintenanceChart = null;
+    }
+
+    if (logs.length === 0) {
+        maintenanceCanvas.hidden = true;
+        maintenanceEmpty.hidden = false;
+        return;
+    }
+
+    maintenanceCanvas.hidden = false;
+    maintenanceEmpty.hidden = true;
+
+    const sorted = logs.slice().sort((a, b) => new Date(a.performed_at) - new Date(b.performed_at));
+    const xLabels = [...new Set(sorted.map((log) => formatLabel(log.performed_at)))];
+    const yLabels = [...new Set(sorted.map((log) => log.task_type))].sort();
+
+    maintenanceChart = new Chart(maintenanceCanvas, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Maintenance Event',
+                data: sorted.map((log) => ({ x: formatLabel(log.performed_at), y: log.task_type })),
+                backgroundColor: CHART_COLORS.maintenance,
+                borderColor: CHART_COLORS.maintenance,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+            }],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Maintenance events over time',
+                    color: CHART_COLORS.ink,
+                    font: CHART_FONT,
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => `${context.raw.y} on ${context.raw.x}`,
+                    },
+                },
+            },
+            scales: {
+                x: { ...baseScaleOptions(), type: 'category', labels: xLabels },
+                y: { ...baseScaleOptions(), type: 'category', labels: yLabels },
+            },
+        },
+    });
+}
+
 async function loadTankData(tankId) {
-    const [waterTests, organisms] = await Promise.all([
+    const [waterTests, organisms, maintenanceLogs] = await Promise.all([
         fetch(`api/water_tests.php?tank_id=${tankId}`).then((r) => r.json()),
         fetch(`api/organisms.php?tank_id=${tankId}`).then((r) => r.json()),
+        fetch(`api/maintenance_logs.php?tank_id=${tankId}`).then((r) => r.json()),
     ]);
 
     currentWaterTests = waterTests;
     populateParameterSelect();
     renderLivestockChart(organisms);
+    renderMaintenanceChart(maintenanceLogs);
 }
 
 async function loadTanks() {
