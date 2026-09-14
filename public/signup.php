@@ -1,24 +1,28 @@
 <?php
-//load environment settings and dependencies using relative pathing
 require_once __DIR__ . '/../includes/auth.php';
 
-//bounce already authorized managers to dashboard immediately
 redirectIfLoggedIn();
 
 $errorMessage = "";
 $username = "";
+$email = "";
 
-//evaluate form transmission block
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST["username"] ?? '');
+    $email = trim($_POST["email"] ?? '');
     $password = trim($_POST['password'] ?? '');
+    $confirmPassword = trim($_POST['confirm_password'] ?? '');
 
-    $result = loginUser($username, $password);
-
-    if ($result['success']) {
-        redirect('index.php');
+    if ($password !== $confirmPassword) {
+        $errorMessage = "Passwords do not match.";
     } else {
-        $errorMessage = $result['error'];
+        $result = registerUser($username, $email, $password);
+
+        if ($result['success']) {
+            redirect('login.php');
+        } else {
+            $errorMessage = $result['error'];
+        }
     }
 }
 ?>
@@ -27,17 +31,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Aquarium Manager - Login</title>
+        <title>Aquarium Manager - Sign Up</title>
         <link rel="stylesheet" href="css/main.css">
     </head>
 
     <body>
-        <!-- Modular navigation architecture link hook -->
-         <?php include __DIR__ . '/../includes/nav.php'; ?>
+        <?php include __DIR__ . '/../includes/nav.php'; ?>
 
          <main class="login-wrapper">
             <section class="login-card">
-                <h2>Login</h2>
+                <h2>Sign Up</h2>
 
                 <?php if ($errorMessage !== ""): ?>
                     <p class="error-message"><?php echo htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8'); ?></p>
@@ -50,16 +53,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
 
                     <div class="input-component">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required autocomplete="email" value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>" >
+                    </div>
+
+                    <div class="input-component">
                         <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                        <input type="password" id="password" name="password" required autocomplete="new-password">
+                    </div>
+
+                    <div class="input-component">
+                        <label for="confirm_password">Confirm Password:</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password">
                     </div>
 
                     <div class="action-component">
-                        <button type="submit" class="btn-primary">Login</button>
+                        <button type="submit" class="btn-primary">Sign Up</button>
                     </div>
                 </form>
 
-                <p>Don't have an account? <a href="signup.php">Sign up</a></p>
+                <p>Already have an account? <a href="login.php">Log in</a></p>
             </section>
          </main>
     </body>
