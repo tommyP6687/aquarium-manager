@@ -49,6 +49,15 @@ requireLogin();
                 </div>
                 <p id="livestock-chart-empty" class="chart-empty" hidden>No organisms in this tank yet.</p>
             </section>
+
+            <section>
+                <h3>Maintenance Event Timeline</h3>
+
+                <div class="chart-container">
+                    <canvas id="maintenance-chart"></canvas>
+                </div>
+                <p id="maintenance-chart-empty" class="chart-empty" hidden>No maintenance logs for this tank yet.</p>
+            </section>
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
