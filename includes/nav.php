@@ -5,6 +5,7 @@
     <a href="organisms.php">Organisms</a>
     <a href="water_tests.php">Water Tests</a>
     <a href="maintenance_logs.php">Maintenance</a>
+    <a href="reminders.php">Reminders</a>
     <a href="graphs.php">Graphs</a>
     <a href="logout.php">Logout</a>
 </nav>

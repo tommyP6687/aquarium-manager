@@ -1,5 +1,31 @@
 const needsAttentionList = document.getElementById('needs-attention-list');
 const dashboardTankList = document.getElementById('dashboard-tank-list');
+const upcomingRemindersList = document.getElementById('upcoming-reminders-list');
+
+function renderUpcomingReminders(reminders) {
+    const upcoming = reminders.filter((reminder) => !Number(reminder.is_completed));
+
+    if (upcoming.length === 0) {
+        upcomingRemindersList.innerHTML = '<p>No upcoming reminders.</p>';
+        return;
+    }
+
+    upcomingRemindersList.innerHTML = '';
+
+    for (const reminder of upcoming) {
+        const card = document.createElement('div');
+        card.className = 'tank-card';
+
+        const title = document.createElement('h4');
+        title.textContent = reminder.title;
+
+        const meta = document.createElement('p');
+        meta.textContent = [reminder.task_type, `Tank: ${reminder.tank_name}`, `Due: ${reminder.due_at}`].join(' • ');
+
+        card.append(title, meta);
+        upcomingRemindersList.appendChild(card);
+    }
+}
 
 function renderNeedsAttention(organisms) {
     const flagged = organisms.filter((organism) => organism.health_status !== 'Healthy');
@@ -86,10 +112,11 @@ function renderTanks(tanks, organismsByTank, spritesById) {
 }
 
 async function loadDashboard() {
-    const [tanks, organisms, sprites] = await Promise.all([
+    const [tanks, organisms, sprites, reminders] = await Promise.all([
         fetch('api/tanks.php').then((r) => r.json()),
         fetch('api/organisms.php').then((r) => r.json()),
         fetch('api/pixel_art.php').then((r) => r.json()),
+        fetch('api/reminders.php').then((r) => r.json()),
     ]);
 
     const organismsByTank = new Map();
@@ -101,6 +128,7 @@ async function loadDashboard() {
 
     const spritesById = new Map(sprites.map((sprite) => [sprite.id, sprite]));
 
+    renderUpcomingReminders(reminders);
     renderNeedsAttention(organisms);
     renderTanks(tanks, organismsByTank, spritesById);
 }

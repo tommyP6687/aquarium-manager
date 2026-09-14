@@ -21,7 +21,15 @@ requireLogin();
             <div class="action-component">
                 <a href="tanks.php" class="btn-secondary">Add a Tank</a>
                 <a href="organisms.php" class="btn-secondary">Add an Organism</a>
+                <a href="reminders.php" class="btn-secondary">Add a Reminder</a>
             </div>
+
+            <section>
+                <h3>Upcoming Reminders</h3>
+                <div id="upcoming-reminders-list" class="tank-list">
+                    <p>Loading...</p>
+                </div>
+            </section>
 
             <section>
                 <h3>Needs Attention</h3>

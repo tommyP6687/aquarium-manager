@@ -115,3 +115,21 @@ CREATE TABLE IF NOT EXISTS MaintenanceLog (
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
     FOREIGN KEY (tank_id) REFERENCES Tanks(id) ON DELETE CASCADE -- Foreign Key to reference Tanks table for id
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create Reminder table.
+CREATE TABLE IF NOT EXISTS Reminder (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    tank_id INT UNSIGNED NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    task_type VARCHAR(50) NOT NULL, -- e.g. Feed fish, Test water, Clean filter
+    due_at DATETIME NOT NULL,
+    repeat_interval_days INT UNSIGNED, -- null = one-time reminder
+    is_completed BOOLEAN NOT NULL DEFAULT FALSE,
+    completed_at DATETIME,
+    notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id), -- Primary Key for Reminder table
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
+    FOREIGN KEY (tank_id) REFERENCES Tanks(id) ON DELETE CASCADE -- Foreign Key to reference Tanks table for id
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
