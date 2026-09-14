@@ -77,3 +77,13 @@ function rgb_to_hex(array $rgb): string
 {
     return sprintf('#%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
 }
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+function redirect($location)
+{
+    header('Location: ' . $location);
+    exit;
+}
