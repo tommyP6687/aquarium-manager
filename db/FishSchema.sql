@@ -100,3 +100,18 @@ CREATE TABLE IF NOT EXISTS WaterTest (
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
     FOREIGN KEY (tank_id) REFERENCES Tanks(id) ON DELETE CASCADE -- Foreign Key to reference Tanks table for id
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create MaintenanceLog table. One row per completed care task.
+CREATE TABLE IF NOT EXISTS MaintenanceLog (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    tank_id INT UNSIGNED NOT NULL,
+    performed_at DATETIME NOT NULL,
+    task_type VARCHAR(50) NOT NULL, -- e.g. Feeding, Water Change, Filter Cleaning
+    details TEXT,
+    notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id), -- Primary Key for MaintenanceLog table
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
+    FOREIGN KEY (tank_id) REFERENCES Tanks(id) ON DELETE CASCADE -- Foreign Key to reference Tanks table for id
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
