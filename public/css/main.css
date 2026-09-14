@@ -145,3 +145,52 @@ body {
 .btn-secondary:hover {
     background-color: rgb(255, 255, 255);
 }
+
+.species-suggestions {
+    margin-top: 5px;
+    border: 1.5px solid black;
+    border-radius: 5px;
+    background-color: white;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.species-suggestion {
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
+.species-suggestion:hover {
+    background-color: rgb(198, 229, 254);
+}
+
+.sprite-thumbnail {
+    display: grid;
+    width: 64px;
+    height: 64px;
+    border: 1px solid black;
+}
+
+.sprite-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.sprite-bank-item {
+    padding: 5px;
+    border: 1.5px solid black;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.sprite-bank-item p {
+    margin: 5px 0 0;
+    font-size: 12px;
+}
+
+.sprite-bank-item.selected {
+    background-color: rgb(198, 229, 254);
+}
