@@ -60,6 +60,7 @@ function fillEditForm(organism) {
     document.getElementById('health_status').value = organism.health_status ?? 'Healthy';
     document.getElementById('growth_stage').value = organism.growth_stage ?? '';
     document.getElementById('current_size_inches').value = organism.current_size_inches ?? '';
+    document.getElementById('organism_notes').value = organism.notes ?? '';
 
     // Tank/date/species/sprite aren't editable here -- hide those fields rather
     // than silently ignoring whatever the user types into them.
@@ -231,6 +232,7 @@ organismForm.addEventListener('submit', async (event) => {
             health_status: document.getElementById('health_status').value,
             growth_stage: document.getElementById('growth_stage').value || null,
             current_size_inches: document.getElementById('current_size_inches').value || null,
+            notes: document.getElementById('organism_notes').value.trim() || null,
         };
 
         const response = await fetch(`api/organisms.php?id=${editingId}`, {
@@ -298,6 +300,7 @@ organismForm.addEventListener('submit', async (event) => {
         health_status: document.getElementById('health_status').value,
         growth_stage: document.getElementById('growth_stage').value || null,
         current_size_inches: document.getElementById('current_size_inches').value || null,
+        notes: document.getElementById('organism_notes').value.trim() || null,
         scientific_name: scientificNameInput.value.trim(),
         common_name: commonNameInput.value.trim() || null,
         organism_type: organismTypeSelect.value || null,

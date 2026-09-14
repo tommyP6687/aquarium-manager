@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS Organism (
     health_status VARCHAR(50) NOT NULL DEFAULT 'Healthy',
     growth_stage VARCHAR(50),
     current_size_inches DECIMAL(6,2),
+    notes TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id), -- Primary Key for Organism table
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
