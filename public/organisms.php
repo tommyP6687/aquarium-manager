@@ -65,6 +65,7 @@ requireLogin();
                                 <option>Sub-adult</option>
                                 <option>Adult</option>
                             </select>
+                            <button type="button" id="use-growth-estimate" hidden>Use estimate</button>
                         </div>
                         <div class="input-component">
                             <label for="current_size_inches">Current Size (inches):</label>
