@@ -1,6 +1,32 @@
 const needsAttentionList = document.getElementById('needs-attention-list');
 const dashboardTankList = document.getElementById('dashboard-tank-list');
 const upcomingRemindersList = document.getElementById('upcoming-reminders-list');
+const compatibilityWarningsList = document.getElementById('compatibility-warnings-list');
+
+function renderCompatibilityWarnings(warnings) {
+    if (warnings.length === 0) {
+        compatibilityWarningsList.innerHTML = '<p>No compatibility warnings right now.</p>';
+        return;
+    }
+
+    compatibilityWarningsList.innerHTML = '';
+
+    for (const warning of warnings) {
+        const card = document.createElement('div');
+        card.className = 'tank-card';
+
+        const title = document.createElement('h4');
+        title.textContent = warning.custom_name || warning.tank_name;
+
+        const meta = document.createElement('p');
+        meta.textContent = [warning.tank_name !== title.textContent ? `Tank: ${warning.tank_name}` : null, warning.warning]
+            .filter(Boolean)
+            .join(' • ');
+
+        card.append(title, meta);
+        compatibilityWarningsList.appendChild(card);
+    }
+}
 
 function renderUpcomingReminders(reminders) {
     const upcoming = reminders.filter((reminder) => !Number(reminder.is_completed));
@@ -112,11 +138,12 @@ function renderTanks(tanks, organismsByTank, spritesById) {
 }
 
 async function loadDashboard() {
-    const [tanks, organisms, sprites, reminders] = await Promise.all([
+    const [tanks, organisms, sprites, reminders, warnings] = await Promise.all([
         fetch('api/tanks.php').then((r) => r.json()),
         fetch('api/organisms.php').then((r) => r.json()),
         fetch('api/pixel_art.php').then((r) => r.json()),
         fetch('api/reminders.php').then((r) => r.json()),
+        fetch('api/compatibility_warnings.php').then((r) => r.json()),
     ]);
 
     const organismsByTank = new Map();
@@ -129,6 +156,7 @@ async function loadDashboard() {
     const spritesById = new Map(sprites.map((sprite) => [sprite.id, sprite]));
 
     renderUpcomingReminders(reminders);
+    renderCompatibilityWarnings(warnings);
     renderNeedsAttention(organisms);
     renderTanks(tanks, organismsByTank, spritesById);
 }

@@ -47,6 +47,18 @@ CREATE TABLE IF NOT EXISTS Species (
     organism_type VARCHAR(50), -- e.g. Fish, Invertebrate, Plant, Coral
     salinity_type VARCHAR(50), -- e.g. freshwater, saltwater, brackish
     external_taxon_id INT UNSIGNED, -- iNaturalist taxon id, if found via species search
+    min_temp_f DECIMAL(4,1),
+    max_temp_f DECIMAL(4,1),
+    min_ph DECIMAL(3,1),
+    max_ph DECIMAL(3,1),
+    min_tank_size_gallons DECIMAL(6,1),
+    adult_size_inches DECIMAL(5,2),
+    temperament VARCHAR(50), -- e.g. Peaceful, Semi-aggressive, Aggressive
+    min_group_size INT UNSIGNED, -- e.g. 6 for schooling fish; null/1 = no group requirement
+    care_level VARCHAR(20), -- e.g. Beginner, Intermediate, Advanced
+    is_plant_safe BOOLEAN, -- nullable: null = unknown, not "safe"
+    is_shrimp_safe BOOLEAN, -- nullable: null = unknown, not "safe"
+    care_notes TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id) -- Primary Key for Species table
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
