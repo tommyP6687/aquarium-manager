@@ -82,7 +82,7 @@ function renderNeedsAttention(organisms) {
     }
 }
 
-function renderTanks(tanks, organismsByTank, spritesById) {
+function renderTanks(tanks, organismsByTank, spritesById, healthByTank) {
     if (tanks.length === 0) {
         dashboardTankList.innerHTML = '<p>No tanks yet. Add one to get started.</p>';
         return;
@@ -103,6 +103,15 @@ function renderTanks(tanks, organismsByTank, spritesById) {
             .join(' • ');
 
         card.append(title, meta);
+
+        const health = healthByTank.get(tank.id);
+        if (health) {
+            const healthLine = document.createElement('p');
+            healthLine.textContent = `Health: ${health.score}/100 — ${health.status}`;
+            const suggestion = document.createElement('p');
+            suggestion.textContent = health.suggestion;
+            card.append(healthLine, suggestion);
+        }
 
         const organisms = organismsByTank.get(tank.id) || [];
 
@@ -138,13 +147,16 @@ function renderTanks(tanks, organismsByTank, spritesById) {
 }
 
 async function loadDashboard() {
-    const [tanks, organisms, sprites, reminders, warnings] = await Promise.all([
+    const [tanks, organisms, sprites, reminders, warnings, healthScores] = await Promise.all([
         fetch('api/tanks.php').then((r) => r.json()),
         fetch('api/organisms.php').then((r) => r.json()),
         fetch('api/pixel_art.php').then((r) => r.json()),
         fetch('api/reminders.php').then((r) => r.json()),
         fetch('api/compatibility_warnings.php').then((r) => r.json()),
+        fetch('api/tank_health.php').then((r) => r.json()),
     ]);
+
+    const healthByTank = new Map(healthScores.map((health) => [health.tank_id, health]));
 
     const organismsByTank = new Map();
     for (const organism of organisms) {
@@ -158,7 +170,7 @@ async function loadDashboard() {
     renderUpcomingReminders(reminders);
     renderCompatibilityWarnings(warnings);
     renderNeedsAttention(organisms);
-    renderTanks(tanks, organismsByTank, spritesById);
+    renderTanks(tanks, organismsByTank, spritesById, healthByTank);
 }
 
 loadDashboard();

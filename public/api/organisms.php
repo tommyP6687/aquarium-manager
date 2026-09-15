@@ -12,18 +12,42 @@ $updatableColumns = ['custom_name', 'health_status', 'growth_stage', 'current_si
 
 const ORGANISM_SELECT = '
     SELECT Organism.*, Tanks.custom_name AS tank_name,
-           Species.common_name AS species_common_name, Species.scientific_name AS species_scientific_name
+           Species.common_name AS species_common_name, Species.scientific_name AS species_scientific_name,
+           Species.adult_size_inches AS species_adult_size_inches
     FROM Organism
     JOIN Tanks ON Organism.tank_id = Tanks.id
     JOIN Species ON Organism.species_id = Species.id
 ';
+
+function withGrowthEstimate(array $organism): array
+{
+    $current = $organism['current_size_inches'];
+    $adult = $organism['species_adult_size_inches'];
+
+    if ($current === null || $adult === null || (float) $adult <= 0) {
+        $organism['estimated_growth_stage'] = null;
+        return $organism;
+    }
+
+    $ratio = (float) $current / (float) $adult;
+
+    if ($ratio < 0.4) {
+        $organism['estimated_growth_stage'] = 'Juvenile';
+    } elseif ($ratio < 0.8) {
+        $organism['estimated_growth_stage'] = 'Sub-adult';
+    } else {
+        $organism['estimated_growth_stage'] = 'Adult';
+    }
+
+    return $organism;
+}
 
 function findOwnedOrganism(PDO $pdo, int $id, int $userId): ?array
 {
     $stmt = $pdo->prepare(ORGANISM_SELECT . ' WHERE Organism.id = ? AND Organism.user_id = ? LIMIT 1');
     $stmt->execute([$id, $userId]);
     $organism = $stmt->fetch();
-    return $organism ?: null;
+    return $organism ? withGrowthEstimate($organism) : null;
 }
 
 function isOwnedRow(PDO $pdo, string $table, int $id, int $userId): bool
@@ -79,7 +103,7 @@ try {
 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute($params);
-                send_json($stmt->fetchAll());
+                send_json(array_map('withGrowthEstimate', $stmt->fetchAll()));
             }
 
             $organism = findOwnedOrganism($pdo, $id, $userId);

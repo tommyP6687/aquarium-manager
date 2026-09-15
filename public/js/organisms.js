@@ -48,6 +48,7 @@ function resetForm() {
     spriteFieldset.hidden = false;
     tankField.hidden = false;
     dateAddedField.hidden = false;
+    document.getElementById('use-growth-estimate').hidden = true;
     organismFormTitle.textContent = 'Add an Organism';
     organismFormSubmit.textContent = 'Add Organism';
     organismFormCancel.hidden = true;
@@ -61,6 +62,18 @@ function fillEditForm(organism) {
     document.getElementById('growth_stage').value = organism.growth_stage ?? '';
     document.getElementById('current_size_inches').value = organism.current_size_inches ?? '';
     document.getElementById('organism_notes').value = organism.notes ?? '';
+
+    const useEstimateButton = document.getElementById('use-growth-estimate');
+    if (organism.estimated_growth_stage) {
+        useEstimateButton.hidden = false;
+        useEstimateButton.textContent = `Use estimate: ${organism.estimated_growth_stage}`;
+        useEstimateButton.onclick = () => {
+            document.getElementById('growth_stage').value = organism.estimated_growth_stage;
+        };
+    } else {
+        useEstimateButton.hidden = true;
+        useEstimateButton.onclick = null;
+    }
 
     // Tank/date/species/sprite aren't editable here -- hide those fields rather
     // than silently ignoring whatever the user types into them.
@@ -141,10 +154,15 @@ async function loadOrganisms() {
         title.textContent = organism.custom_name;
 
         const meta = document.createElement('p');
+        let growthText = organism.growth_stage ? `Growth: ${organism.growth_stage}` : null;
+        if (organism.estimated_growth_stage && organism.estimated_growth_stage !== organism.growth_stage) {
+            growthText = `${growthText || 'Growth: Unspecified'} (estimated: ${organism.estimated_growth_stage})`;
+        }
         meta.textContent = [
             organism.species_common_name || organism.species_scientific_name,
             `Tank: ${organism.tank_name}`,
             organism.health_status,
+            growthText,
         ].filter(Boolean).join(' • ');
 
         const editButton = document.createElement('button');
