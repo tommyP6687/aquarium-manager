@@ -133,3 +133,22 @@ CREATE TABLE IF NOT EXISTS Reminder (
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
     FOREIGN KEY (tank_id) REFERENCES Tanks(id) ON DELETE CASCADE -- Foreign Key to reference Tanks table for id
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create WishlistItem table. tank_id is nullable -- an item may not be earmarked for a tank yet.
+CREATE TABLE IF NOT EXISTS WishlistItem (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id INT UNSIGNED NOT NULL,
+    tank_id INT UNSIGNED,
+    item_name VARCHAR(150) NOT NULL,
+    category VARCHAR(50) NOT NULL, -- e.g. Fish, Invertebrate, Plant, Equipment
+    estimated_price DECIMAL(8,2),
+    store_or_source VARCHAR(150),
+    priority VARCHAR(20) NOT NULL DEFAULT 'Medium', -- e.g. Low, Medium, High
+    compatibility_notes TEXT,
+    purchase_status VARCHAR(20) NOT NULL DEFAULT 'Wanted', -- e.g. Wanted, Purchased, Cancelled
+    notes TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id), -- Primary Key for WishlistItem table
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE, -- Foreign Key to reference Users table for id
+    FOREIGN KEY (tank_id) REFERENCES Tanks(id) ON DELETE SET NULL -- Foreign Key to reference Tanks table for id; detach rather than delete
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
