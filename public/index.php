@@ -32,6 +32,13 @@ requireLogin();
             </section>
 
             <section>
+                <h3>Compatibility Warnings</h3>
+                <div id="compatibility-warnings-list" class="tank-list">
+                    <p>Loading...</p>
+                </div>
+            </section>
+
+            <section>
                 <h3>Needs Attention</h3>
                 <div id="needs-attention-list" class="tank-list">
                     <p>Loading...</p>
