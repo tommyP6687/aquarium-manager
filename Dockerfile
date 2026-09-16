@@ -26,3 +26,5 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --optimize-autoloader
 
 COPY . .
+
+EXPOSE 80

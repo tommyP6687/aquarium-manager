@@ -2,7 +2,7 @@
 
 A fun, practical aquarium management app that lets users track their real aquariums while maintaining a pixel-art virtual version of each tank. Users can log livestock, plants, water parameters, maintenance tasks, reminders, notes, photos, wishlist items, and tank health trends.
 
-**Live demo:** _TODO — fill in after deploying (see [DEPLOYMENT.md](DEPLOYMENT.md))_
+**Live demo:** http://aquarium-manager-env.eba-ayrpkhs3.us-east-1.elasticbeanstalk.com
 
 ## Cloud Architecture
 

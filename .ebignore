@@ -1,0 +1,5 @@
+# EB's Docker platform auto-detects docker-compose.yml and deploys it instead of
+# the plain Dockerfile if present -- that file is for local dev only (it runs a
+# throwaway MySQL container instead of the real RDS instance), so it must never
+# reach the deploy bundle.
+docker-compose.yml
