@@ -1,6 +1,10 @@
 # Deployment (AWS)
 
-This app runs against three managed AWS services in production: **RDS for MySQL** (database), **S3** (rendered PNG snapshots of pixel-art sprites), and **Elastic Beanstalk** (hosting). All of it is optional for local development — with no AWS environment variables set, the app runs exactly as before, sprites just render from the client-side pixel grid instead of a stored PNG.
+This app runs against three managed AWS services in production: **RDS for MySQL** (database), **S3** (rendered PNG snapshots of pixel-art sprites), and **Elastic Beanstalk** (hosting, running the app's own Docker image). All of it is optional for local development — with no AWS environment variables set, the app runs exactly as before, sprites just render from the client-side pixel grid instead of a stored PNG.
+
+## Local development with Docker
+
+`docker compose up --build` starts the app (built from the repo's `Dockerfile`) alongside a MySQL container, with `db/FishSchema.sql` loaded automatically on first run. The app is then reachable at `http://localhost:8080`. This is the same image that runs in production on Elastic Beanstalk — no AWS env vars are set here, so sprites use the client-side grid render as usual. Running locally without Docker (`php -S localhost:8080 -t public`) still works exactly as before; Docker is just an alternative, not a requirement.
 
 ## 1. S3 bucket (sprite storage)
 
@@ -51,7 +55,7 @@ Attaching this role to the EB environment's instances lets the AWS SDK pick up c
 
 ## 4. Elastic Beanstalk
 
-1. Install the EB CLI, then from the repo root: `eb init` (choose the PHP platform, your region).
+1. Install the EB CLI, then from the repo root: `eb init` and choose the **Docker** platform (not the native PHP platform) — EB will build and run the repo's own `Dockerfile` rather than installing PHP itself.
 2. `eb create <environment-name>`, attaching the IAM instance profile from step 3.
 3. Set environment properties (Configuration → Software → Environment properties):
 
@@ -66,7 +70,7 @@ Attaching this role to the EB environment's instances lets the AWS SDK pick up c
    | `AWS_REGION` | e.g. `us-east-1` |
    | `S3_BUCKET` | e.g. `aquarium-manager-sprites` |
 
-4. `eb deploy`. The platform auto-detects `composer.json` and runs `composer install` for you.
+4. `eb deploy`. EB builds the `Dockerfile` (which already runs `composer install` at build time) and runs the resulting container.
 5. Verify: `https://<your-eb-url>/health.php` should return `OK`; the login page should load at the root URL.
 
 Once you have the URL, drop it into the "Live demo" line in [README.md](README.md).

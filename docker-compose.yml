@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: aquarium_manager
+      DB_USER: aquarium
+      DB_PASS: aquarium_dev_password
+      # S3_BUCKET / AWS_REGION intentionally unset -- sprites fall back to the
+      # client-side grid render locally, same as running without Docker at all.
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: aquarium_manager
+      MYSQL_USER: aquarium
+      MYSQL_PASSWORD: aquarium_dev_password
+      MYSQL_ROOT_PASSWORD: aquarium_root_dev_password
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db/FishSchema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:

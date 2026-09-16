@@ -10,9 +10,10 @@ Runs on AWS in production:
 
 - **RDS for MySQL** — managed database (swap-in replacement for local MySQL via env vars, no code changes needed).
 - **S3** — stores a rendered PNG snapshot of each hand-drawn pixel-art sprite, served directly as thumbnails; the editable grid data itself stays in MySQL.
-- **Elastic Beanstalk** — hosting, with an instance IAM role scoped to the sprites bucket (no access keys stored anywhere).
+- **Docker** — the app is packaged as a container (see [Dockerfile](Dockerfile)); the same image runs locally (`docker compose up`) and in production.
+- **Elastic Beanstalk** — hosting, running that Docker image, with an instance IAM role scoped to the sprites bucket (no access keys stored anywhere).
 
-None of this is required for local development — with no AWS environment variables set, the app runs entirely locally and sprites render from the client-side pixel grid instead of a stored PNG. See [DEPLOYMENT.md](DEPLOYMENT.md) for the full setup checklist.
+None of this is required for local development — `php -S localhost:8080 -t public` still works standalone, and with no AWS environment variables set the app runs entirely locally with sprites rendered from the client-side pixel grid instead of a stored PNG. See [DEPLOYMENT.md](DEPLOYMENT.md) for the full setup checklist.
 
 ## Project Summary
 
