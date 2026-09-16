@@ -91,6 +91,12 @@ body {
     padding: 20px;
 }
 
+.tanks-page > h2 {
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgb(90, 60, 30);
+}
+
 .tank-list {
     display: flex;
     flex-direction: column;
@@ -103,6 +109,7 @@ body {
     border: 1.5px solid black;
     border-radius: 5px;
     background-color: rgb(255, 250, 208);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 .tank-card h4 {
@@ -113,6 +120,7 @@ body {
     padding: 15px;
     border-radius: 5px;
     background-color: rgb(255, 250, 208);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 .tank-form-section fieldset {
@@ -261,20 +269,62 @@ body {
 
 .site-nav {
     display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 15px;
-    padding: 15px 20px;
+    padding: 12px 20px;
     background-color: rgb(255, 250, 208);
     border-bottom: 1.5px solid black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.site-nav-brand {
+    font-weight: bold;
+    font-size: 18px;
+    white-space: nowrap;
+}
+
+.site-nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+}
+
+.site-nav-divider {
+    width: 1.5px;
+    height: 18px;
+    background-color: rgba(0, 0, 0, 0.2);
+    margin: 0 4px;
 }
 
 .site-nav a {
     color: black;
     text-decoration: none;
     font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1.5px solid transparent;
+    transition: background-color 0.2s ease;
 }
 
 .site-nav a:hover {
-    text-decoration: underline;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.site-nav a.active {
+    background-color: rgb(198, 229, 254);
+    border-color: black;
+}
+
+.site-nav .site-nav-logout {
+    margin-left: auto;
+    color: rgb(150, 30, 30);
+}
+
+.site-nav .site-nav-logout:hover {
+    background-color: rgba(220, 100, 100, 0.15);
 }
 
 a.btn-secondary {
@@ -300,6 +350,7 @@ a.btn-secondary {
     border: 1.5px solid black;
     border-radius: 5px;
     background-color: rgb(252, 252, 251);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 .chart-empty {
