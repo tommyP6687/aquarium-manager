@@ -19,11 +19,8 @@ const organismTypeSelect = document.getElementById('organism_type');
 const speciesSalinityInput = document.getElementById('species_salinity_type');
 const externalTaxonIdInput = document.getElementById('external_taxon_id');
 
-const spriteUploadFields = document.getElementById('sprite-upload-fields');
-const spriteBankFields = document.getElementById('sprite-bank-fields');
 const spriteBankContainer = document.getElementById('sprite-bank');
-const spriteNameInput = document.getElementById('sprite_name');
-const spritePhotoInput = document.getElementById('sprite_photo');
+const refreshSpritesButton = document.getElementById('refresh-sprites-button');
 
 let selectedSpriteId = null;
 let userSprites = [];
@@ -43,6 +40,7 @@ function resetForm() {
     organismForm.reset();
     organismIdField.value = '';
     selectedSpriteId = null;
+    document.querySelectorAll('.sprite-bank-item').forEach((el) => el.classList.remove('selected'));
     speciesSuggestions.hidden = true;
     speciesFieldset.hidden = false;
     spriteFieldset.hidden = false;
@@ -110,7 +108,7 @@ async function loadSprites() {
     spriteBankContainer.innerHTML = '';
 
     if (userSprites.length === 0) {
-        spriteBankContainer.innerHTML = '<p>No saved sprites yet. Upload a photo instead.</p>';
+        spriteBankContainer.innerHTML = '<p>No saved sprites yet. Open the Pixel Art Editor to draw one.</p>';
         return;
     }
 
@@ -230,13 +228,7 @@ speciesSearchInput.addEventListener('input', () => {
     }, 350);
 });
 
-document.querySelectorAll('input[name="sprite_mode"]').forEach((radio) => {
-    radio.addEventListener('change', () => {
-        const isUpload = radio.value === 'upload' && radio.checked;
-        spriteUploadFields.hidden = !isUpload;
-        spriteBankFields.hidden = isUpload;
-    });
-});
+refreshSpritesButton.addEventListener('click', loadSprites);
 
 organismForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -281,34 +273,9 @@ organismForm.addEventListener('submit', async (event) => {
         return;
     }
 
-    const spriteMode = document.querySelector('input[name="sprite_mode"]:checked').value;
-    let pixelArtId = null;
-
-    if (spriteMode === 'upload') {
-        if (!spritePhotoInput.files[0]) {
-            showFormError('Please choose a photo to upload.');
-            return;
-        }
-
-        const spriteData = new FormData();
-        spriteData.append('sprite_name', spriteNameInput.value.trim() || scientificNameInput.value.trim());
-        spriteData.append('photo', spritePhotoInput.files[0]);
-
-        const spriteResponse = await fetch('api/pixel_art.php', { method: 'POST', body: spriteData });
-        const spriteResult = await spriteResponse.json();
-
-        if (!spriteResponse.ok) {
-            showFormError(spriteResult.error || 'Could not generate a sprite from that photo.');
-            return;
-        }
-
-        pixelArtId = spriteResult.id;
-    } else {
-        if (!selectedSpriteId) {
-            showFormError('Please choose a sprite from your bank.');
-            return;
-        }
-        pixelArtId = selectedSpriteId;
+    if (!selectedSpriteId) {
+        showFormError('Please choose a sprite from your bank (or open the Pixel Art Editor to draw one first).');
+        return;
     }
 
     const organismData = {
@@ -324,7 +291,7 @@ organismForm.addEventListener('submit', async (event) => {
         organism_type: organismTypeSelect.value || null,
         salinity_type: speciesSalinityInput.value.trim() || null,
         external_taxon_id: externalTaxonIdInput.value || null,
-        pixel_art_id: pixelArtId,
+        pixel_art_id: selectedSpriteId,
     };
 
     const response = await fetch('api/organisms.php', {

@@ -3,6 +3,7 @@
     <a href="index.php">Dashboard</a>
     <a href="tanks.php">Tanks</a>
     <a href="organisms.php">Organisms</a>
+    <a href="pixel_art_editor.php">Pixel Art Editor</a>
     <a href="species.php">Species</a>
     <a href="water_tests.php">Water Tests</a>
     <a href="maintenance_logs.php">Maintenance</a>

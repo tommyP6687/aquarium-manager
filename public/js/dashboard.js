@@ -129,7 +129,10 @@ function renderTanks(tanks, organismsByTank, spritesById, healthByTank) {
 
                 const sprite = spritesById.get(organism.pixel_art_id);
                 if (sprite) {
-                    item.appendChild(renderSpriteThumbnail(JSON.parse(sprite.pixel_data), sprite.grid_size));
+                    const pixelData = JSON.parse(sprite.pixel_data);
+                    const thumbnail = renderSpriteThumbnail(pixelData, sprite.grid_size);
+                    enableSpriteExpand(thumbnail, pixelData, sprite.grid_size);
+                    item.appendChild(thumbnail);
                 }
 
                 const label = document.createElement('p');

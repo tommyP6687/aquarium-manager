@@ -1,17 +1,18 @@
 <?php
 /**
  * functions.php
- * Shared helper functions. Currently holds the pixel art palette and
- * quantization helper used by the photo-to-sprite generator; general app
- * helpers (formatting, validation, etc.) can be added here as they come up.
+ * Shared helper functions. Currently holds the pixel art palette definition,
+ * used by the hand-drawn pixel art editor to render its color swatches;
+ * general app helpers (formatting, validation, etc.) can be added here as
+ * they come up.
  */
 
 /**
- * A small fixed palette for pixel art sprites. Snapping every generated
- * pixel to one of these colors is what makes a downsized photo read as
- * pixel art instead of just a blurry small photo. Chosen to cover common
- * fish/plant colors (oranges, reds, blues, greens) plus neutrals for
- * shading and highlights.
+ * A small fixed palette for pixel art sprites, offered as one-click swatches
+ * in the hand-drawn editor. Chosen to cover common fish/plant colors
+ * (oranges, reds, blues, greens) plus neutrals for shading and highlights.
+ * Users aren't limited to it -- the editor also offers a native color
+ * picker for exact custom colors.
  *
  * @return array<int, array{0:int,1:int,2:int}> RGB triples
  */
@@ -43,34 +44,6 @@ function pixel_art_palette(): array
         [245, 245, 255],  // near-white (highlight)
         [255, 190, 0],    // gold
     ];
-}
-
-/**
- * Snap an RGB color to the closest color in the given palette, by squared
- * Euclidean distance in RGB space. Squared distance is used (no sqrt)
- * since only the ordering of distances matters here, not their magnitude.
- *
- * @param array<int, array{0:int,1:int,2:int}> $palette
- * @return array{0:int,1:int,2:int}
- */
-function nearest_palette_color(int $r, int $g, int $b, array $palette): array
-{
-    $best = $palette[0];
-    $bestDistance = PHP_INT_MAX;
-
-    foreach ($palette as $color) {
-        $dr = $r - $color[0];
-        $dg = $g - $color[1];
-        $db = $b - $color[2];
-        $distance = $dr * $dr + $dg * $dg + $db * $db;
-
-        if ($distance < $bestDistance) {
-            $bestDistance = $distance;
-            $best = $color;
-        }
-    }
-
-    return $best;
 }
 
 function rgb_to_hex(array $rgb): string

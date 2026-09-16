@@ -114,26 +114,14 @@ requireLogin();
                     <fieldset id="sprite-fieldset">
                         <legend>Sprite</legend>
 
-                        <div class="input-component">
-                            <label><input type="radio" name="sprite_mode" value="upload" checked> Upload a photo</label>
-                            <label><input type="radio" name="sprite_mode" value="bank"> Choose from my sprites</label>
+                        <p>Need a new sprite? <a href="pixel_art_editor.php" target="_blank">Open the Pixel Art Editor</a>, then come back here.</p>
+
+                        <div class="action-component">
+                            <button type="button" id="refresh-sprites-button" class="btn-secondary">Refresh My Sprites</button>
                         </div>
 
-                        <div id="sprite-upload-fields">
-                            <div class="input-component">
-                                <label for="sprite_name">Sprite Name:</label>
-                                <input type="text" id="sprite_name">
-                            </div>
-                            <div class="input-component">
-                                <label for="sprite_photo">Photo:</label>
-                                <input type="file" id="sprite_photo" accept="image/*">
-                            </div>
-                        </div>
-
-                        <div id="sprite-bank-fields" hidden>
-                            <div id="sprite-bank" class="sprite-bank">
-                                <p>Loading your sprites...</p>
-                            </div>
+                        <div id="sprite-bank" class="sprite-bank">
+                            <p>Loading your sprites...</p>
                         </div>
                     </fieldset>
 
