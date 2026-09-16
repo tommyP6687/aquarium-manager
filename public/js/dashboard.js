@@ -129,9 +129,8 @@ function renderTanks(tanks, organismsByTank, spritesById, healthByTank) {
 
                 const sprite = spritesById.get(organism.pixel_art_id);
                 if (sprite) {
-                    const pixelData = JSON.parse(sprite.pixel_data);
-                    const thumbnail = renderSpriteThumbnail(pixelData, sprite.grid_size);
-                    enableSpriteExpand(thumbnail, pixelData, sprite.grid_size);
+                    const thumbnail = renderSpriteImage(sprite);
+                    enableSpriteExpand(thumbnail, JSON.parse(sprite.pixel_data), sprite.grid_size);
                     item.appendChild(thumbnail);
                 }
 

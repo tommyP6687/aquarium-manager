@@ -109,8 +109,7 @@ async function loadVirtualTank() {
             continue;
         }
 
-        const pixelData = JSON.parse(sprite.pixel_data);
-        const element = renderSpriteThumbnail(pixelData, sprite.grid_size);
+        const element = renderSpriteImage(sprite);
         const size = BASE_SPRITE_SIZE * scaleForOrganism(organism);
 
         element.className += ' virtual-organism';
@@ -128,8 +127,7 @@ async function loadVirtualTank() {
             return;
         }
 
-        const pixelData = JSON.parse(sprite.pixel_data);
-        const element = renderSpriteThumbnail(pixelData, sprite.grid_size);
+        const element = renderSpriteImage(sprite);
         const size = BASE_SPRITE_SIZE * scaleForOrganism(organism);
 
         element.className += ' virtual-organism';

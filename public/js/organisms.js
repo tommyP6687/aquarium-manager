@@ -116,8 +116,7 @@ async function loadSprites() {
         const card = document.createElement('div');
         card.className = 'sprite-bank-item';
 
-        const pixelData = JSON.parse(sprite.pixel_data);
-        card.appendChild(renderSpriteThumbnail(pixelData, sprite.grid_size));
+        card.appendChild(renderSpriteImage(sprite));
 
         const label = document.createElement('p');
         label.textContent = sprite.sprite_name;

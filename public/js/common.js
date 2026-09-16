@@ -14,6 +14,22 @@ function renderSpriteThumbnail(pixelData, gridSize) {
     return wrapper;
 }
 
+// Prefers the S3-hosted PNG snapshot (cheap to render, exercises the cloud
+// storage read path) for small thumbnails; falls back to the client-side
+// CSS-grid render when no image_url exists yet (S3 not configured, or the
+// upload failed at save time) -- so this always works regardless of AWS setup.
+function renderSpriteImage(sprite) {
+    if (sprite.image_url) {
+        const img = document.createElement('img');
+        img.className = 'sprite-thumbnail';
+        img.src = sprite.image_url;
+        img.alt = sprite.sprite_name || 'sprite';
+        return img;
+    }
+
+    return renderSpriteThumbnail(JSON.parse(sprite.pixel_data), sprite.grid_size);
+}
+
 function openSpriteLightbox(pixelData, gridSize) {
     let overlay = document.getElementById('sprite-lightbox-overlay');
 

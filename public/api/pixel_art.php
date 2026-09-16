@@ -61,6 +61,20 @@ try {
             $stmt->execute([$userId, $spriteName, $gridSize, json_encode($input['pixel_data']), 'hand_drawn']);
 
             $newId = (int) $pdo->lastInsertId();
+
+            if (getenv('S3_BUCKET')) {
+                require_once __DIR__ . '/../../includes/sprite_render.php';
+                require_once __DIR__ . '/../../includes/s3_storage.php';
+
+                $png = renderSpriteToPng($input['pixel_data'], $gridSize);
+                $imageUrl = uploadSpriteToS3($userId, $newId, $png);
+
+                if ($imageUrl) {
+                    $stmt = $pdo->prepare('UPDATE PixelArt SET image_url = ? WHERE id = ?');
+                    $stmt->execute([$imageUrl, $newId]);
+                }
+            }
+
             $stmt = $pdo->prepare('SELECT * FROM PixelArt WHERE id = ? AND user_id = ?');
             $stmt->execute([$newId, $userId]);
 

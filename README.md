@@ -2,6 +2,18 @@
 
 A fun, practical aquarium management app that lets users track their real aquariums while maintaining a pixel-art virtual version of each tank. Users can log livestock, plants, water parameters, maintenance tasks, reminders, notes, photos, wishlist items, and tank health trends.
 
+**Live demo:** _TODO — fill in after deploying (see [DEPLOYMENT.md](DEPLOYMENT.md))_
+
+## Cloud Architecture
+
+Runs on AWS in production:
+
+- **RDS for MySQL** — managed database (swap-in replacement for local MySQL via env vars, no code changes needed).
+- **S3** — stores a rendered PNG snapshot of each hand-drawn pixel-art sprite, served directly as thumbnails; the editable grid data itself stays in MySQL.
+- **Elastic Beanstalk** — hosting, with an instance IAM role scoped to the sprites bucket (no access keys stored anywhere).
+
+None of this is required for local development — with no AWS environment variables set, the app runs entirely locally and sprites render from the client-side pixel grid instead of a stored PNG. See [DEPLOYMENT.md](DEPLOYMENT.md) for the full setup checklist.
+
 ## Project Summary
 
 **Manage Aquarium** is a personal aquarium journal and management system. Each user can create one or more tanks, add fish, invertebrates, plants, or other aquarium life, and see those additions reflected in a virtual pixel-art tank.

@@ -69,8 +69,9 @@ CREATE TABLE IF NOT EXISTS PixelArt (
     user_id INT UNSIGNED NOT NULL,
     sprite_name VARCHAR(100) NOT NULL,
     grid_size TINYINT UNSIGNED NOT NULL,
-    pixel_data JSON NOT NULL, -- grid of hex color strings
-    source_type VARCHAR(20) NOT NULL, -- 'photo_generated' for now; 'hand_drawn' reserved for a future editor
+    pixel_data JSON NOT NULL, -- grid of hex color strings; editable source of truth
+    source_type VARCHAR(20) NOT NULL, -- 'hand_drawn' (only path currently; see project memory)
+    image_url VARCHAR(500), -- rendered PNG snapshot in S3, if cloud storage is configured; null otherwise
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id), -- Primary Key for PixelArt table
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE -- Foreign Key to reference Users table for id

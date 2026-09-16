@@ -13,10 +13,20 @@ function get_db(): PDO
 
         $dsn = "mysql:host={$host};port={$port};dbname={$dbname};charset=utf8mb4";
 
-        $pdo = new PDO($dsn, $user, $pass, [
+        $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]);
+        ];
+
+        // Set only when connecting to a TLS-enforcing managed DB (e.g. RDS) --
+        // local/dev connections are unaffected when DB_SSL_CA is unset.
+        $sslCa = getenv('DB_SSL_CA');
+        if ($sslCa) {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = $sslCa;
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
+        }
+
+        $pdo = new PDO($dsn, $user, $pass, $options);
     }
 
     return $pdo;
