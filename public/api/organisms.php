@@ -13,7 +13,7 @@ $updatableColumns = ['custom_name', 'health_status', 'growth_stage', 'current_si
 const ORGANISM_SELECT = '
     SELECT Organism.*, Tanks.custom_name AS tank_name,
            Species.common_name AS species_common_name, Species.scientific_name AS species_scientific_name,
-           Species.adult_size_inches AS species_adult_size_inches
+           Species.adult_size_inches AS species_adult_size_inches, Species.organism_type AS species_organism_type
     FROM Organism
     JOIN Tanks ON Organism.tank_id = Tanks.id
     JOIN Species ON Organism.species_id = Species.id

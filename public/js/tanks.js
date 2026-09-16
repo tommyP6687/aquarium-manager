@@ -95,6 +95,11 @@ function renderTankList(tanks) {
             .filter(Boolean)
             .join(' • ');
 
+        const viewTankLink = document.createElement('a');
+        viewTankLink.href = `virtual_tank.php?tank_id=${tank.id}`;
+        viewTankLink.className = 'btn-secondary';
+        viewTankLink.textContent = 'View Virtual Tank';
+
         const editButton = document.createElement('button');
         editButton.type = 'button';
         editButton.textContent = 'Edit';
@@ -105,7 +110,7 @@ function renderTankList(tanks) {
         deleteButton.textContent = 'Delete';
         deleteButton.addEventListener('click', () => deleteTank(tank.id));
 
-        card.append(title, meta, editButton, deleteButton);
+        card.append(title, meta, viewTankLink, editButton, deleteButton);
         tankList.appendChild(card);
     }
 }
