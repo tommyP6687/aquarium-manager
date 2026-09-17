@@ -2,10 +2,6 @@
 
 This app runs against three managed AWS services in production: **RDS for MySQL** (database), **S3** (rendered PNG snapshots of pixel-art sprites), and **Elastic Beanstalk** (hosting, running the app's own Docker image). All of it is optional for local development — with no AWS environment variables set, the app runs exactly as before, sprites just render from the client-side pixel grid instead of a stored PNG.
 
-## Local development with Docker
-
-`docker compose up --build` starts the app (built from the repo's `Dockerfile`) alongside a MySQL container, with `db/FishSchema.sql` loaded automatically on first run. The app is then reachable at `http://localhost:8080`. This is the same image that runs in production on Elastic Beanstalk — no AWS env vars are set here, so sprites use the client-side grid render as usual. Running locally without Docker (`php -S localhost:8080 -t public`) still works exactly as before; Docker is just an alternative, not a requirement.
-
 ## 1. S3 bucket (sprite storage)
 
 1. Create a bucket (e.g. `aquarium-manager-sprites`). Keep "Block all public access" **on** at the bucket level.
